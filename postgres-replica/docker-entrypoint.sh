@@ -37,7 +37,9 @@ if [ ! -s "$PGDATA/PG_VERSION" ]; then
     echo "Waiting for master to connect..."
     sleep 1s
   done
+fi
 
+if [ ! -s "$PGDATA/postgresql.conf" ]; then
   cp /tmp-conf/*  ${PGDATA}
 fi
 

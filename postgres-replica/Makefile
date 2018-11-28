@@ -1,5 +1,5 @@
 image_name = dalpo/postgres-replica
-image_version = 9.6-alpine.1
+image_version = 9.6-alpine.2
 
 .PHONY: build
 build:
