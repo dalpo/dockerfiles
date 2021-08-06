@@ -28,11 +28,18 @@ if [ "$1" = 'postgres' ] && [ "$(id -u)" = '0' ]; then
   exec gosu postgres "$BASH_SOURCE" "$@"
 fi
 
+if [ ! -s ~/.pgpass ]; then
+  echo "[ENTRYPOING] WARN the ~/.pgpass is missing!"
+  echo "[ENTRYPOING] Configuring the ~/.pgpass file..."
+  echo "*:*:*:$PG_REP_USERNAME:$PG_REP_PASSWORD" > ~/.pgpass
+  chmod 0600 ~/.pgpass
+fi
+
 if [ ! -s "$PGDATA/PG_VERSION" ]; then
 
   echo "[ENTRYPOING] Setup .pgpass ..."
-  echo "*:*:*:$PG_REP_USERNAME:$PG_REP_PASSWORD" > /var/lib/postgresql/data/.pgpass
-  chmod 0600 /var/lib/postgresql/data/.pgpass
+  echo "*:*:*:$PG_REP_USERNAME:$PG_REP_PASSWORD" > ~/.pgpass
+  chmod 0600 ~/.pgpass
 
   until ping -c 1 -W 1 $PG_REP_HOSTNAME
   do
