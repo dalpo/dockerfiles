@@ -1,0 +1,33 @@
+version: "3.7"
+
+networks:
+  external_network:
+    external: true
+
+  internal_network:
+    internal: true
+
+services:
+  pg_replica:
+    environment:
+      PG_REP_HOSTNAME: '192.168.123.234'
+      PG_REP_PORT: '5432'
+      PG_REP_USERNAME: 'user_replicator'
+      PG_REP_PASSWORD: 's3cr3t'
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 's3cr3t'
+
+    restart: always
+    image: "dalpo/postgres-replica:11.12-buster.1"
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    networks:
+      - internal_network
+      - external_network
+
+    volumes:
+      - "./volume/pg_replica:/var/lib/postgresql/data"
+
+
