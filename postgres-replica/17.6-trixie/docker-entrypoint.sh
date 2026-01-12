@@ -41,7 +41,7 @@ if [ ! -s "$PGDATA/PG_VERSION" ]; then
   echo "*:*:*:$PG_REP_USERNAME:$PG_REP_PASSWORD" >~/.pgpass
   chmod 0600 ~/.pgpass
 
-  until ping -c 1 -W 1 $PG_REP_HOSTNAME; do
+  until pg_isready -h $PG_REP_HOSTNAME -q; do
     echo "[ENTRYPOINT] Waiting for main PG to ping at $PG_REP_HOSTNAME..."
 
     sleep 1s
