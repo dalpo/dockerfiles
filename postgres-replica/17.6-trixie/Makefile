@@ -1,5 +1,5 @@
 image_name = dalpo/postgres-replica
-image_version = 17.6-trixie.1
+image_version = 17.6-trixie.3
 
 .PHONY: build
 build:

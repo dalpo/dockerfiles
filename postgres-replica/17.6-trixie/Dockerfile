@@ -9,7 +9,8 @@
 FROM postgres:17.6-trixie
 
 ENV LANG=en_US.UTF-8 \
-    LANGUAGE=en_US.UTF-8
+    LANGUAGE=en_US.UTF-8 \
+    DEBIAN_FRONTEND=noninteractive
 
 RUN apt update && \
     apt install -y iputils-ping
