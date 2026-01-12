@@ -2,11 +2,11 @@
 
 set -Eeo pipefail
 
-echo "[ENTRYPOINT] Boot from entrypoint."
+echo "[ENTRYPOING] Boot from entrypoint."
 
 # allow the container to be started with `--user`
 if [ "$1" = 'postgres' ] && [ "$(id -u)" = '0' ]; then
-  echo "[ENTRYPOINT] Configuring PGDATA..."
+  echo "[ENTRYPOING] Configuring PGDATA..."
 
   mkdir -p "$PGDATA"
   chown -R postgres "$PGDATA"
@@ -29,34 +29,36 @@ if [ "$1" = 'postgres' ] && [ "$(id -u)" = '0' ]; then
 fi
 
 if [ ! -s ~/.pgpass ]; then
-  echo "[ENTRYPOINT] WARN the ~/.pgpass is missing!"
-  echo "[ENTRYPOINT] Configuring the ~/.pgpass file..."
-  echo "*:*:*:$PG_REP_USERNAME:$PG_REP_PASSWORD" >~/.pgpass
+  echo "[ENTRYPOING] WARN the ~/.pgpass is missing!"
+  echo "[ENTRYPOING] Configuring the ~/.pgpass file..."
+  echo "*:*:*:$PG_REP_USERNAME:$PG_REP_PASSWORD" > ~/.pgpass
   chmod 0600 ~/.pgpass
 fi
 
 if [ ! -s "$PGDATA/PG_VERSION" ]; then
 
-  echo "[ENTRYPOINT] Setup .pgpass ..."
-  echo "*:*:*:$PG_REP_USERNAME:$PG_REP_PASSWORD" >~/.pgpass
+  echo "[ENTRYPOING] Setup .pgpass ..."
+  echo "*:*:*:$PG_REP_USERNAME:$PG_REP_PASSWORD" > ~/.pgpass
   chmod 0600 ~/.pgpass
 
-  until pg_isready -h $PG_REP_HOSTNAME -q; do
-    echo "[ENTRYPOINT] Waiting for main PG to ping at $PG_REP_HOSTNAME..."
+  until ping -c 1 -W 1 $PG_REP_HOSTNAME
+  do
+    echo "[ENTRYPOING] Waiting for main PG to ping at $PG_REP_HOSTNAME..."
 
     sleep 1s
   done
 
-  echo "[ENTRYPOINT] Starting inital pg_basebackup..."
-  until pg_basebackup -h $PG_REP_HOSTNAME -D ${PGDATA} -U $PG_REP_USERNAME -p $PG_REP_PORT -vP -Xs -R; do
-    echo "[ENTRYPOINT] Waiting for main PG to ping..."
+  echo "[ENTRYPOING] Starting inital pg_basebackup..."
+  until pg_basebackup -h $PG_REP_HOSTNAME -D ${PGDATA} -U $PG_REP_USERNAME -p $PG_REP_PORT -vP -Xs -R
+  do
+    echo "[ENTRYPOING] Waiting for main PG to ping..."
     sleep 1s
   done
 fi
 
 if [ ! -s "$PGDATA/postgresql.conf" ]; then
-  echo "[ENTRYPOINT] Copying postgresql conf files..."
-  cp /tmp-conf/* ${PGDATA}
+  echo "[ENTRYPOING] Coping postgresql conf files..."
+  cp /tmp-conf/*  ${PGDATA}
 fi
 
 # sed -i 's/wal_level = hot_standby/wal_level = replica/g' ${PGDATA}/postgresql.conf

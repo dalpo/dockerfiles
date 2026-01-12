@@ -1,1 +1,3 @@
 postgres-replica/11.12-buster/volume
+postgres-replica/13.18-bookworm/volume
+postgres-replica/17.6-trixie/volume
